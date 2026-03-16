@@ -201,47 +201,9 @@ echo -e 'src/Model.php\t45\tUse DI here\nsrc/Controller.php\t120\tAdd try/catch'
 
 Scripts auto-detect credentials from `~/.bitbucket-rest-cli-config.json` or environment variables (`BB_WORKSPACE`, `BB_REPO`, `BB_USER`, `BB_APP_PASSWORD`).
 
-## Alternative: bb-cli (PHP-based)
-
-For users who prefer a PHP CLI tool, `bb-cli` is also available.
-
-### Installation
-
-```bash
-curl -L https://github.com/bb-cli/bb-cli/releases/latest/download/bb -o /usr/local/bin/bb
-chmod +x /usr/local/bin/bb
-```
-
-Auth: `bb auth` (follow prompts). Config: `~/.bitbucket-rest-cli-config.json`. See [BB_CLI_CONFIG.md](BB_CLI_CONFIG.md).
-
-### bb-cli Commands
-
-| Command | Description |
-|---------|-------------|
-| `bb pr list [branch]` | List PRs, optionally filter by destination branch |
-| `bb pr create <source> <dest>` | Create PR from source to destination branch |
-| `bb pr merge <pr-id>` | Merge PR |
-| `bb pr approve <pr-id>` | Approve PR |
-| `bb pr no-approve <pr-id>` | Remove approval |
-| `bb pr request-changes <pr-id>` | Request changes (code review) |
-| `bb pr no-request-changes <pr-id>` | Remove request-changes status |
-| `bb pr decline <pr-id>` | Decline PR |
-| `bb pr diff <pr-id>` | Show PR diff |
-| `bb pr commits <pr-id>` | List PR commits |
-| `bb pipeline run <branch>` | Run default pipeline for branch |
-| `bb pipeline custom <branch> <name>` | Run custom pipeline |
-| `bb pipeline get <pipeline-id>` | Get pipeline details |
-| `bb pipeline latest` | Get latest pipeline info |
-| `bb pipeline wait <pipeline-id>` | Wait for pipeline to complete |
-| `bb env environments` | List all environments |
-| `bb env variables <env-uuid>` | List environment variables |
-| `bb env create-variable <env-uuid> <key> <value> <secured>` | Create variable |
-| `bb env update-variable <env-uuid> <var-uuid> <key> <value> <secured>` | Update variable |
-| `bb branch list` | List branches |
-
 ## Direct API Reference
 
-For advanced use cases not covered by the Python script or bb-cli, see [references/api_reference.md](references/api_reference.md).
+For advanced use cases not covered by the Python script, see [references/api_reference.md](references/api_reference.md).
 
 ## Notes
 

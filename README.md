@@ -77,10 +77,6 @@ Or use natural language:
 "Merge PR #42 with squash strategy"
 ```
 
-## Alternative: bb-cli
-
-The skill also documents [bb-cli](https://github.com/bb-cli/bb-cli), a PHP-based Bitbucket CLI tool, as an alternative backend. See `BB_CLI_CONFIG.md` for setup.
-
 ## Requirements
 
 - Python 3.6+ (no external packages — uses stdlib only)

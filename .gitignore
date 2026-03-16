@@ -1,0 +1,6 @@
+# IDE
+.idea/
+
+# Config files with credentials
+*.config
+bitbucket.config
