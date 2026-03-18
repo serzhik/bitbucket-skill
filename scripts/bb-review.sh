@@ -14,7 +14,7 @@
 # src/Controller/Api.php	120	Add try/catch for exception handling
 #
 # Requires: BB_WORKSPACE, BB_REPO, BB_USER, BB_APP_PASSWORD environment variables
-# Or reads from ~/.bitbucket-rest-cli-config.json
+# Or reads from ~/.claude/bitbucket.config
 
 set -e
 
@@ -38,11 +38,13 @@ if [[ ! -f "$COMMENTS_FILE" ]]; then
     exit 1
 fi
 
-# Try to read config from bb-cli config file
-CONFIG_FILE="$HOME/.bitbucket-rest-cli-config.json"
+# Read config from shared bitbucket config
+CONFIG_FILE="$HOME/.claude/bitbucket.config"
 if [[ -f "$CONFIG_FILE" ]]; then
-    [[ -z "$BB_USER" ]] && BB_USER=$(jq -r '.auth.username // empty' "$CONFIG_FILE" 2>/dev/null || true)
-    [[ -z "$BB_APP_PASSWORD" ]] && BB_APP_PASSWORD=$(jq -r '.auth.appPassword // empty' "$CONFIG_FILE" 2>/dev/null || true)
+    [[ -z "$BB_USER" ]] && BB_USER=$(jq -r '.username // empty' "$CONFIG_FILE" 2>/dev/null || true)
+    [[ -z "$BB_APP_PASSWORD" ]] && BB_APP_PASSWORD=$(jq -r '.app_password // empty' "$CONFIG_FILE" 2>/dev/null || true)
+    [[ -z "$BB_WORKSPACE" ]] && BB_WORKSPACE=$(jq -r '.workspace // empty' "$CONFIG_FILE" 2>/dev/null || true)
+    [[ -z "$BB_REPO" ]] && BB_REPO=$(jq -r '.repo_slug // empty' "$CONFIG_FILE" 2>/dev/null || true)
 fi
 
 # Extract workspace and repo from git remote if not set
@@ -60,7 +62,7 @@ fi
 if [[ -z "$BB_WORKSPACE" || -z "$BB_USER" || -z "$BB_APP_PASSWORD" ]]; then
     echo "Error: Missing Bitbucket credentials"
     echo "Set BB_WORKSPACE, BB_USER, BB_APP_PASSWORD environment variables"
-    echo "Or configure bb auth first"
+    echo "Or create ~/.claude/bitbucket.config with username, app_password, workspace, repo_slug"
     exit 1
 fi
 

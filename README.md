@@ -39,22 +39,53 @@ chmod +x ~/.claude/skills/bitbucket/scripts/*.sh
 
 Supports three auth methods (in priority order):
 
-| Method | Config Key | Auth Type |
-|--------|-----------|-----------|
-| Repository Access Token | `access_token` | Bearer |
-| App Password | `username` + `app_password` | Basic |
-| API Token | `api_token` | Bearer |
+| # | Method | Config Keys | Auth Type |
+|---|--------|------------|-----------|
+| 1 | Atlassian API Token with scopes | `username` + `app_password` | Basic |
+| 2 | Repository Access Token | `access_token` | Bearer |
+| 3 | App Password ⚠️ | `username` + `app_password` | Basic |
 
-### Getting an App Password
+### Getting an Atlassian API Token with Scopes (Recommended)
 
-1. Go to **Bitbucket** > **Personal settings** > **App passwords**
-2. Create with scopes: **Repositories** (Read/Write), **Pull Requests** (Read/Write)
+1. Go to https://id.atlassian.com/manage-profile/security/api-tokens
+2. Click **Create API token with scopes**
+3. Select Bitbucket scopes: `read:pullrequest:bitbucket`, `write:pullrequest:bitbucket`, `read:repository:bitbucket`, `read:pipeline:bitbucket` (and others as needed)
+
+```json
+{
+  "username": "your_atlassian_email",
+  "app_password": "your_atlassian_api_token"
+}
+```
+
+> **Note**: Classic Atlassian API Tokens (created with "Create API token" — without scopes) do NOT work with Bitbucket Cloud API. You must use **"Create API token with scopes"** and select Bitbucket scopes.
 
 ### Getting a Repository Access Token
 
 1. Go to **Repository settings** > **Access tokens** > **Create**
+2. Grant scopes: **Repositories** (Read/Write), **Pull Requests** (Read/Write)
 
-> **Note**: Atlassian API Tokens (used for JIRA/Confluence) do NOT work with Bitbucket Cloud API.
+```json
+{
+  "access_token": "your_repository_access_token"
+}
+```
+
+> Repository Access Tokens are scoped to a single repository and do not require a username.
+
+### Getting an App Password (Deprecated)
+
+> **⚠️ Deprecated**: Bitbucket App Passwords are [deprecated by Atlassian](https://community.atlassian.com/forums/Bitbucket-questions/Deprecating-Atlassian-account-password-for-Bitbucket-API-and-Git/ba-p/2819787). Use Atlassian API Tokens with scopes instead.
+
+1. Go to **Bitbucket** > **Personal settings** > **App passwords**
+2. Create with scopes: **Repositories** (Read/Write), **Pull Requests** (Read/Write)
+
+```json
+{
+  "username": "your_bitbucket_username",
+  "app_password": "your_bitbucket_app_password"
+}
+```
 
 ## Usage
 
