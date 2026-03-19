@@ -4,11 +4,19 @@ description: >
   Interact with Bitbucket — create PRs, list PRs, view PR details, merge, decline, read comments, view pipelines,
   code review with inline comments, manage environments and variables. Use when user says "/bitbucket pr",
   "/bitbucket create-pr", "/bitbucket list-prs", "/bitbucket pipelines", or similar Bitbucket-related requests.
+argument-hint: "[command] [args]"
+allowed-tools: Bash(python3 *), Bash(~/.claude/skills/bitbucket/scripts/*)
 ---
 
 # Bitbucket Skill
 
 Lightweight Bitbucket CLI for Claude Code. Uses a Python script that calls Bitbucket Cloud REST API 2.0 directly and returns **compact output** to minimize token usage.
+
+When invoked with arguments (e.g. `/bitbucket create-pr 123`), run:
+
+```bash
+python3 ~/.claude/skills/bitbucket/bitbucket_api.py $ARGUMENTS
+```
 
 ## Script Location
 
@@ -199,7 +207,7 @@ echo -e 'src/Model.php\t45\tUse DI here\nsrc/Controller.php\t120\tAdd try/catch'
 ~/.claude/skills/bitbucket/scripts/bb-review.sh 42 /tmp/comments.tsv
 ```
 
-Scripts auto-detect credentials from `~/.bitbucket-rest-cli-config.json` or environment variables (`BB_WORKSPACE`, `BB_REPO`, `BB_USER`, `BB_APP_PASSWORD`).
+Scripts auto-detect credentials from `~/.claude/bitbucket.config` or environment variables (`BB_WORKSPACE`, `BB_REPO`, `BB_USER`, `BB_APP_PASSWORD`).
 
 ## Direct API Reference
 
