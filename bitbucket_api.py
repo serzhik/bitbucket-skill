@@ -176,6 +176,31 @@ def cmd_get_pr(config, pr_id):
     print(f"\n{desc}")
 
 
+def cmd_update_pr(config, pr_id, title=None, description=None):
+    """Update a pull request's title and/or description."""
+    payload = {}
+    if title is not None:
+        payload["title"] = title
+    if description is not None:
+        payload["description"] = description
+
+    if not payload:
+        print(
+            "Error: provide at least one of --title, --description, --description-file",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    result = api_request(
+        config, f"/pullrequests/{pr_id}", method="PUT", data=payload
+    )
+    print(f"Updated PR #{result['id']}: {result['title']}")
+    if "description" in payload:
+        desc_len = len(result.get("description") or "")
+        print(f"Description length: {desc_len} chars")
+    print(f"URL: {result['links']['html']['href']}")
+
+
 def cmd_merge_pr(config, pr_id, strategy="merge_commit"):
     """Merge a pull request."""
     data = api_request(
@@ -260,6 +285,8 @@ Commands:
                                      Create pull request
   list-prs [STATE]                   List PRs (OPEN/MERGED/DECLINED/SUPERSEDED)
   get-pr <ID>                        View PR details
+  update-pr <ID> [--title TEXT] [--description TEXT] [--description-file PATH]
+                                     Update PR title and/or description
   merge-pr <ID> [--strategy S]       Merge PR (merge_commit/squash/fast_forward)
   decline-pr <ID>                    Decline PR
   pr-comments <ID>                   List PR comments
@@ -316,6 +343,26 @@ def main():
 
     elif cmd == "get-pr" and len(sys.argv) >= 3:
         cmd_get_pr(config, sys.argv[2])
+
+    elif cmd == "update-pr" and len(sys.argv) >= 3:
+        pr_id = sys.argv[2]
+        title = None
+        description = None
+        i = 3
+        while i < len(sys.argv):
+            if sys.argv[i] == "--title" and i + 1 < len(sys.argv):
+                title = sys.argv[i + 1]
+                i += 2
+            elif sys.argv[i] == "--description" and i + 1 < len(sys.argv):
+                description = sys.argv[i + 1]
+                i += 2
+            elif sys.argv[i] == "--description-file" and i + 1 < len(sys.argv):
+                with open(sys.argv[i + 1]) as f:
+                    description = f.read()
+                i += 2
+            else:
+                i += 1
+        cmd_update_pr(config, pr_id, title=title, description=description)
 
     elif cmd == "merge-pr" and len(sys.argv) >= 3:
         strategy = "merge_commit"
